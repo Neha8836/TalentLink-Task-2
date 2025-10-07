@@ -1,6 +1,6 @@
 # 🌐 TalentLink
 
-TalentLink is a full-stack freelancing platform that connects top freelancers with great clients—securely and efficiently. Built with Django, React, and AWS, it offers real-time project management, proposal workflows, and role-based dashboards tailored to each user.
+TalentLink is a robust full-stack freelancing platform engineered to streamline collaboration between skilled freelancers and discerning clients. It empowers users to post projects, submit proposals, manage contracts, and communicate—all within a secure, role-based environment. Built using Django for backend logic, React for dynamic frontend interfaces, and AWS for scalable deployment, TalentLink delivers real-time project tracking, intuitive dashboards, and modular workflows. Whether you're a freelancer bidding on opportunities or a client managing multiple projects, TalentLink ensures clarity, speed, and trust at every step.
 
 ## 📦 Tech Stack
 
@@ -13,15 +13,7 @@ TalentLink is a full-stack freelancing platform that connects top freelancers wi
 
 ## 📁 Project Structure
 
-talentlink/ ├──
-core/ # Django app (models, views, serializers) 
-├── talentlink-frontend/ # React frontend │ 
-├── src/ 
-├── pages/ # Dashboard, Login, ProjectFeed, etc.  
-├── components/ # Reusable UI components 
-│ └── context/ # Auth and global state 
-├── db.sqlite3 # Development database 
-  └── manage.py # Django management script
+talentlink/ ├── core/ # Django app (models, views, serializers) ├── talentlink-frontend/ # React frontend │ ├── src/ │ │ ├── pages/ # Dashboard, Login, ProjectFeed, etc. │ │ ├── components/ # Reusable UI components │ │ └── context/ # Auth and global state ├── db.sqlite3 # Development database └── manage.py # Django management script
 
 ## ✅ Completed Tasks
 
