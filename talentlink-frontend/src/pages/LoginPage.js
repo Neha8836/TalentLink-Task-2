@@ -20,50 +20,52 @@ function LoginPage() {
   };
 
   const handleLogin = async () => {
-  if (!validateForm()) return;
-  setLoading(true);
+    if (!validateForm()) return;
+    setLoading(true);
 
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/token/', {
-      username,
-      password,
-    });
-
-    const accessToken = response.data.access;
-    const refreshToken = response.data.refresh;
-
-    localStorage.setItem('access', accessToken);
-    localStorage.setItem('refresh', refreshToken);
-    toast.success('Login successful!');
-
-    // ✅ Check if profile exists for this user
     try {
-      const profileRes = await axios.get('http://127.0.0.1:8000/api/profiles/', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+      const response = await axios.post('http://127.0.0.1:8000/api/token/', {
+        username,
+        password,
       });
 
-      if (Array.isArray(profileRes.data) && profileRes.data.length > 0) {
-        toast.info('Welcome back!');
-        navigate('/dashboard');
-      } else {
-        toast.info('No profile found. Redirecting to setup...');
+      const accessToken = response.data.access;
+      const refreshToken = response.data.refresh;
+
+      // ✅ Store tokens
+      localStorage.setItem('access', accessToken);
+      localStorage.setItem('refresh', refreshToken);
+      console.log("Access token stored:", accessToken);
+      toast.success('Login successful!');
+
+      // ✅ Check if profile exists
+      try {
+        const profileRes = await axios.get('http://127.0.0.1:8000/api/profiles/', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (Array.isArray(profileRes.data) && profileRes.data.length > 0) {
+          toast.info('Welcome back!');
+          navigate('/dashboard');
+        } else {
+          toast.info('No profile found. Redirecting to setup...');
+          navigate('/profile-setup');
+        }
+      } catch (profileError) {
+        console.error("Error checking profile:", profileError);
+        toast.error("Could not verify profile. Redirecting to setup...");
         navigate('/profile-setup');
       }
-    } catch (profileError) {
-      console.error("Error checking profile:", profileError);
-      toast.error("Could not verify profile. Redirecting to setup...");
-      navigate('/profile-setup');
+
+    } catch (error) {
+      console.error("Login error:", error.response?.data);
+      toast.error('Login failed: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setLoading(false);
     }
-
-  } catch (error) {
-    toast.error('Login failed: ' + (error.response?.data?.detail || error.message));
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <div className="vh-100 d-flex justify-content-center align-items-center" style={{

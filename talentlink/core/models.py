@@ -21,6 +21,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     bio = models.TextField(blank=True)
+    portfolio = models.TextField(blank=True)  # ✅ Added field
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     availability = models.BooleanField(default=True)
     skills = models.ManyToManyField(Skill, blank=True)

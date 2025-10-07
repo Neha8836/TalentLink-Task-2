@@ -7,6 +7,10 @@ import Dashboard from './pages/Dashboard';
 import ProfileSetup from './pages/ProfileSetup';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
+import ProjectForm from './pages/ProjectForm';
+import ProjectFeed from './pages/ProjectFeed';
+import ProjectDetail from './pages/ProjectDetail';
+
 
 function App() {
   return (
@@ -18,6 +22,27 @@ function App() {
 
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/create-project" element={<ProjectForm />} />
+      <Route path="/my-projects" element={<ProjectFeed />} />
+       
+        <Route
+  path="/project-feed"
+  element={
+    <ProtectedRoute>
+      <ProjectFeed />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/projects/:id"
+  element={
+    <ProtectedRoute>
+      <ProjectDetail />
+    </ProtectedRoute>
+  }
+/>
+
 
         <Route
           path="/dashboard"
@@ -37,6 +62,7 @@ function App() {
           }
         />
       </Routes>
+      
     </Router>
   );
 }

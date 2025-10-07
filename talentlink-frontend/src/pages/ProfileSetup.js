@@ -7,6 +7,7 @@ import { FaUserTie, FaInfoCircle, FaMoneyBillWave, FaCheckCircle, FaTools } from
 function ProfileSetup() {
   const [role, setRole] = useState('freelancer');
   const [bio, setBio] = useState('');
+  const [portfolio, setPortfolio] = useState('');
   const [hourlyRate, setHourlyRate] = useState('');
   const [availability, setAvailability] = useState(true);
   const [skills, setSkills] = useState([]);
@@ -15,13 +16,33 @@ function ProfileSetup() {
   const navigate = useNavigate();
   const token = localStorage.getItem('access');
 
+useEffect(() => {
+  const checkExistingProfile = async () => {
+    if (!token) return;
+    try {
+      const res = await axios.get('http://127.0.0.1:8000/api/profiles/', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.length > 0) {
+        localStorage.setItem('role', res.data[0].role); // ✅ Store role from existing profile
+        toast.info("Profile already exists. Redirecting to dashboard...");
+        setTimeout(() => navigate('/dashboard'), 2000);
+      }
+    } catch (err) {
+      console.error("Error checking profile:", err);
+    }
+  };
+  checkExistingProfile();
+}, []);
+
+
   const handleSkillInput = (e) => {
     const input = e.target.value;
     setSkillInput(input);
     const parsed = input
       .split(',')
-      .map(s => s.trim())
-      .filter(s => s.length > 0);
+      .map(s => parseInt(s.trim()))
+      .filter(n => !isNaN(n));
     setSkills(parsed);
   };
 
@@ -31,10 +52,13 @@ function ProfileSetup() {
     const profileData = {
       role,
       bio,
+      portfolio,
       hourly_rate: parseFloat(hourlyRate),
       availability,
-      skills, // assuming backend accepts skill names
+      skills,
     };
+
+    console.log('Submitting profile:', profileData);
 
     try {
       await axios.post('http://127.0.0.1:8000/api/profiles/', profileData, {
@@ -43,7 +67,7 @@ function ProfileSetup() {
         },
       });
       toast.success('Profile created successfully!');
-      setTimeout(() => navigate('/dashboard'), 2000);
+      setTimeout(() => navigate('/dashboard'), 3000);
     } catch (error) {
       toast.error('Error creating profile: ' + (error.response?.data?.detail || error.message));
     }
@@ -72,13 +96,28 @@ function ProfileSetup() {
           </div>
 
           <div className="mb-3">
+            <label className="form-label"><FaInfoCircle /> Portfolio</label>
+            <input
+              type="text"
+              className="form-control"
+              value={portfolio}
+              onChange={e => setPortfolio(e.target.value)}
+              placeholder="Paste your portfolio URL or description"
+            />
+          </div>
+
+          <div className="mb-3">
             <label className="form-label"><FaMoneyBillWave /> Hourly Rate (₹)</label>
             <input type="number" className="form-control" value={hourlyRate} onChange={e => setHourlyRate(e.target.value)} placeholder="e.g. 500" />
           </div>
 
           <div className="mb-3">
             <label className="form-label"><FaCheckCircle /> Availability</label>
-            <select className="form-select" value={availability} onChange={e => setAvailability(e.target.value === 'true')}>
+            <select
+              className="form-select"
+              value={availability ? 'true' : 'false'}
+              onChange={e => setAvailability(e.target.value === 'true')}
+            >
               <option value="true">Available</option>
               <option value="false">Not Available</option>
             </select>
@@ -91,9 +130,9 @@ function ProfileSetup() {
               className="form-control"
               value={skillInput}
               onChange={handleSkillInput}
-              placeholder="e.g. React, Django, REST"
+              placeholder="e.g. 1, 2, 3"
             />
-            <small className="text-muted">Separate skills with commas</small>
+            <small className="text-muted">Enter skill IDs separated by commas</small>
             {skills.length > 0 && (
               <div className="mt-2">
                 <strong>Parsed Skills:</strong>
