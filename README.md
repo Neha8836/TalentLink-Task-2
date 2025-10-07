@@ -13,7 +13,7 @@ TalentLink is a robust full-stack freelancing platform engineered to streamline 
 
 ## 📁 Project Structure
 
-talentlink/ ├── core/ # Django app (models, views, serializers) ├── talentlink-frontend/ # React frontend │ ├── src/ │ │ ├── pages/ # Dashboard, Login, ProjectFeed, etc. │ │ ├── components/ # Reusable UI components │ │ └── context/ # Auth and global state ├── db.sqlite3 # Development database └── manage.py # Django management script
+```talentlink/ ├── core/ # Django app (models, views, serializers) ├── talentlink-frontend/ # React frontend │ ├── src/ │ │ ├── pages/ # Dashboard, Login, ProjectFeed, etc. │ │ ├── components/ # Reusable UI components │ │ └── context/ # Auth and global state ├── db.sqlite3 # Development database └── manage.py # Django management script```
 
 ## ✅ Completed Tasks
 
